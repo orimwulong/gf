@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 
     // Dependencies used for compilation and runtime
     implementation 'com.google.guava:guava:31.1-jre'
