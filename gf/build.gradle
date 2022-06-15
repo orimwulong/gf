@@ -11,12 +11,12 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-
     // Dependencies used for compilation and runtime
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'org.slf4j:slf4j-api:1.7.36'
+
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 
     // Dependencies only used at runtime, not for compilation
     runtimeOnly 'ch.qos.logback:logback-core:1.2.11'
