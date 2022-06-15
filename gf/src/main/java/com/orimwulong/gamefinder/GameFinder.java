@@ -1,6 +1,5 @@
 package com.orimwulong.gamefinder;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -28,7 +27,7 @@ public class GameFinder {
         boolean initComplete = false;
         logger.info("Initialising GameFinder...");
 
-        String propertiesFileName = "src" + File.separator + "dist" + File.separator + "gf.properties";
+        String propertiesFileName = "gf.properties";
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(propertiesFileName));
