@@ -1,0 +1,58 @@
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'application'
+    // Code coverage plugin
+    id 'jacoco'
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+
+    // Dependencies used for compilation and runtime
+    implementation 'com.google.guava:guava:30.1.1-jre'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+
+    // Dependencies only used at runtime, not for compilation
+    runtimeOnly 'ch.qos.logback:logback-core:1.2.11'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.2.11'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'com.orimwulong.gamefinder.GameFinder'
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+jacoco {
+    // Force toolVersion to utilise version working with Java 18
+    toolVersion = "0.8.8"
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                // Enforce minimum code coverage
+                minimum = 0.3
+            }
+        }
+    }
+}
+
+// Enforce that distributions are only made if tests are successful
+distZip.dependsOn test
+distTar.dependsOn test
+// Enforce that tests include code coverage verification
+test.finalizedBy jacocoTestCoverageVerification
+// Enforce that code coverage reports are created
+jacocoTestCoverageVerification.finalizedBy jacocoTestReport
