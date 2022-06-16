@@ -3,6 +3,8 @@ plugins {
     id 'application'
     // Code coverage plugin
     id 'jacoco'
+    // Code quality plugin
+    id 'pmd'
 }
 
 repositories {
@@ -44,16 +46,29 @@ jacocoTestCoverageVerification {
         rule {
             limit {
                 // Enforce minimum code coverage
-                minimum = 0.3
+                minimum = 0.1
             }
         }
     }
 }
 
+pmd {
+    toolVersion = "6.46.0"
+    // From Medium priority warning only (values 1 to 5, 1 is highest).
+    rulesMinimumPriority = 3
+    // Clear default ruleSets of gradle plugin
+    ruleSets = []
+    // Use custom ruleset to enable exclusion of rules
+    ruleSetConfig = resources.text.fromFile("config/pmd/ruleset.xml")
+}
+
 // Enforce that distributions are only made if tests are successful
 distZip.dependsOn test
 distTar.dependsOn test
+// Chaining code coverage and code quality to ensure distributions are not created if one stage fail
 // Enforce that tests include code coverage verification
 test.finalizedBy jacocoTestCoverageVerification
 // Enforce that code coverage reports are created
 jacocoTestCoverageVerification.finalizedBy jacocoTestReport
+// Enforece the code quality is run as part of test
+jacocoTestReport.finalizedBy pmdMain

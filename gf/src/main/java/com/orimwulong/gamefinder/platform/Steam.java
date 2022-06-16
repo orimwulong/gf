@@ -15,7 +15,7 @@ import com.orimwulong.gamefinder.utils.HttpsHelper;
 
 public class Steam implements Platform {
 
-    private static final Logger logger = LoggerFactory.getLogger(Steam.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Steam.class);
 
     private String steamID64;
     private String webAPIKey;
@@ -28,14 +28,17 @@ public class Steam implements Platform {
 
     @Override
     public boolean configure(Map<String, String> configMap) {
-        if (configMap == null)
+        if (configMap == null) {
             return false;
+        }
 
         this.steamID64 = configMap.get("steam.steamid64");
         this.webAPIKey = configMap.get("steam.webapi.key");
 
         if (Strings.isNullOrEmpty(this.steamID64) || Strings.isNullOrEmpty(this.webAPIKey)) {
-            logger.debug("configMap didn't not contain expected keys or values were empty.");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("configMap didn't not contain expected keys or values were empty.");
+            }
             return false;
         }
 
@@ -44,13 +47,16 @@ public class Steam implements Platform {
 
     @Override
     public String getRawOwnedGamesList() {
-        String result = null;
+        String result;
         String baseUrl = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&include_appinfo=true&include_played_free_games=true";
         String urlWithTokens = baseUrl +"&steamid=" + this.steamID64 + "&key=" + this.webAPIKey;
-        logger.info("Retrieving owned games list");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Retrieving owned games list");
+        }
         result = HttpsHelper.getHttpsContent(urlWithTokens);
-        if (Strings.isNullOrEmpty(result))
-            logger.error("Unable to retrieve ownder games list. Base URL was [" + baseUrl + "]");
+        if (Strings.isNullOrEmpty(result) && LOGGER.isErrorEnabled()) {
+            LOGGER.error("Unable to retrieve ownder games list. Base URL was [" + baseUrl + "]");
+        }
         return result;
     }
 
@@ -61,9 +67,21 @@ public class Steam implements Platform {
         try {
             readRoot(reader, collection);
             reader.close();
-            logger.info("Steam games count ["+ this.totalGamesCount + "]. Loaded collection games count [" + collection.getNumberOfGames() + "].");
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Steam games count ["+ this.totalGamesCount + "]. Loaded collection games count [" + collection.getNumberOfGames() + "].");
+            }
         } catch (IOException e) {
-            logger.error("Exception while parsing content", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Exception while parsing content", e);
+            }
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                if (LOGGER.isTraceEnabled()) {
+                    LOGGER.trace("Exception while closing reader", e);
+                }
+            }
         }
     }
 
@@ -101,9 +119,9 @@ public class Steam implements Platform {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("name")) {
+            if ("name".equals(name)) {
                 gameName = reader.nextString();
-            } else if (name.equals("playtime_forever")) {
+            } else if ("playtime_forever".equals(name)) {
                 totalMinutesPlayed = reader.nextLong();
             } else {
                 reader.skipValue();

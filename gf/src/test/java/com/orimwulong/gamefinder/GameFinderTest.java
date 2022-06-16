@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameFinderTest {
     @Test void initFully() {
-        GameFinder classUnderTest = new GameFinder();
-        assertTrue(classUnderTest.init());
+        GameFinder gf = new GameFinder();
+        assertTrue(gf.init(), "GameFinder must init fully");
     }
 }

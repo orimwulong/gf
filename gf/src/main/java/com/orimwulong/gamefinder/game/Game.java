@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Game {
 
-    private String name;
+    private final String name;
     private long totalMinutesPlayed;
     private Set<String> onPlatform;
 
@@ -28,7 +28,7 @@ public class Game {
 
     public boolean addPlatform(String platformName) {
         if (this.onPlatform == null) {
-            this.onPlatform = new HashSet<String>();
+            this.onPlatform = new HashSet<>();
         }
         return this.onPlatform.add(platformName);
     }
@@ -57,18 +57,23 @@ public class Game {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Game other = (Game) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 

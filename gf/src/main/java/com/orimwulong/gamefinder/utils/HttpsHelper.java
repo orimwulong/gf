@@ -13,12 +13,19 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.CharStreams;
 
-public class HttpsHelper {
+public final class HttpsHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpsHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpsHelper.class);
 
-    public static final String getHttpsContent(String httpsUrl) {
+    private HttpsHelper() {
+        throw new java.lang.UnsupportedOperationException("HttpsHelper is a utility class and cannot be instantiated");
+    }
+
+    public static String getHttpsContent(String httpsUrl) {
+        int okResponseCode = 200;
         String content = null;
+        InputStream is = null;
+        Reader reader = null;
         try {
             URL url = new URL(httpsUrl);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -26,17 +33,31 @@ public class HttpsHelper {
             conn.connect();
             int responseCode = conn.getResponseCode();
             String responseMessage = conn.getResponseMessage();
-            if (responseCode == 200) {
-                InputStream is = conn.getInputStream();
-                Reader reader = new InputStreamReader(is);
+            if (responseCode == okResponseCode) {
+                is = conn.getInputStream();
+                reader = new InputStreamReader(is);
                 content = CharStreams.toString(reader);
                 reader.close();
+                is.close();
             } else {
-                logger.error("Content retrieval failed. [Code=" + responseCode + "][Message=" + responseMessage + "]");
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error("Content retrieval failed. [Code=" + responseCode + "][Message=" + responseMessage + "]");
+                }
             }
             conn.disconnect();
         } catch (IOException e) {
-            logger.error("Exception while getting HTTPS content", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Exception while getting HTTPS content", e);
+            }
+        } finally {
+            try {
+                reader.close();
+                is.close();
+            } catch (IOException e) {
+                if (LOGGER.isTraceEnabled()) {
+                    LOGGER.trace("Exception while closing streams", e);
+                }
+            }
         }
 
         return content;
