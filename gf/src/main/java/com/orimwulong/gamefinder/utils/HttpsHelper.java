@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.CharStreams;
 
-public class HttpsApi {
+public class HttpsHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpsApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpsHelper.class);
 
     public static final String getHttpsContent(String httpsUrl) {
         String content = null;

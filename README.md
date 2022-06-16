@@ -22,6 +22,8 @@ Maybe one day:
 
 - GOG
 - Epic Game Store
+- Origin
+- Microsoft Store
 
 ## Run requirements
 
@@ -30,7 +32,7 @@ Maybe one day:
 
 ## Configuration
 
- 1. Read and modify the properties file **gf.properties**
+- Read and modify the properties file **gf.properties**
 
 ## Usage
 
@@ -47,5 +49,7 @@ Use the labels to differentiate between a *bug* and an *enhancement*
 
 ## References
 
-- [Steam Web API](https://developer.valvesoftware.com/wiki/Steam_Web_API)
 - [GitHub MarkDown Syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [Gson](https://github.com/google/gson)
+- [Guava](https://github.com/google/guava)
+- [Steam Web API](https://developer.valvesoftware.com/wiki/Steam_Web_API)
