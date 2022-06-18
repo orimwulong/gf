@@ -43,7 +43,7 @@ See program usage for details
 ```
 
 ```shell
-    bin\gf -h
+    bin/gf -h
 ```
 
 ## Issues / Improvements
