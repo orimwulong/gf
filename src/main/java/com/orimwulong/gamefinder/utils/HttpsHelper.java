@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -35,7 +36,7 @@ public final class HttpsHelper {
             String responseMessage = conn.getResponseMessage();
             if (responseCode == okResponseCode) {
                 is = conn.getInputStream();
-                reader = new InputStreamReader(is);
+                reader = new InputStreamReader(is, StandardCharsets.UTF_8);
                 content = CharStreams.toString(reader);
                 reader.close();
                 is.close();

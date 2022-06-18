@@ -2,5 +2,4 @@
 .vscode
 build
 bin
-
-/gf/gf.properties
+/gf.properties

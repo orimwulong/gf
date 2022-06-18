@@ -36,10 +36,14 @@ Maybe one day:
 
 ## Usage
 
+See program usage for details
+
+```bat
+    bin\gf.bat -h
+```
+
 ```shell
-    How many hours / days have I played on Steam across all apps?
-    What are the top X games I played in terms of hours? (Similar to what you can find in someone profiles)
-    List X games I never played.
+    bin\gf -h
 ```
 
 ## Issues / Improvements
@@ -47,8 +51,13 @@ Maybe one day:
 Please report issues and improvements idea using the [GitHub Issues page](https://github.com/orimwulong/gf/issues)
 Use the labels to differentiate between a *bug* and an *enhancement*
 
+## License
+
+See LICENSE file
+
 ## References
 
+- [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/)
 - [GitHub MarkDown Syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 - [Gson](https://github.com/google/gson)
 - [Guava](https://github.com/google/guava)
