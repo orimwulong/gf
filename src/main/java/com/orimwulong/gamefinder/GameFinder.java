@@ -22,10 +22,6 @@ import com.orimwulong.gamefinder.platform.Steam;
 public class GameFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameFinder.class);
-    private static final String OPT_TOTAL = "t";
-    private static final String OPT_LADDER = "l";
-    private static final String OPT_NEVER = "n";
-    private static final String OPT_HELP = "h";
     private static Options options;
 
     private Steam steam;
@@ -35,7 +31,7 @@ public class GameFinder {
 
         GameFinder gf = new GameFinder();
         gf.cmd = parseArgs(args);
-        if (gf.cmd == null || gf.cmd.hasOption(OPT_HELP)) {
+        if (gf.cmd == null || gf.cmd.hasOption(GameFinderConstants.OPT_HELP)) {
             usage(options);
         } else {
             if (gf.init()) {
@@ -46,10 +42,28 @@ public class GameFinder {
 
     private static CommandLine parseArgs(String[] args) {
         options = new Options();
-        options.addOption(Option.builder(OPT_TOTAL).longOpt("total").hasArg(false).desc("Total play time").build());
-        options.addOption(Option.builder(OPT_LADDER).longOpt("ladder").hasArg(true).type(Integer.class).desc("Ladder of the n games played the most").build());
-        options.addOption(Option.builder(OPT_NEVER).longOpt("never").hasArg(true).type(Integer.class).desc("List n games never played. A game never played is a game played less than " + GamesCollection.NEVER_PLAYED + " minutes. -1 for all games never played").build());
-        options.addOption(Option.builder(OPT_HELP).longOpt("help").hasArg(false).desc("Write this help message").build());
+        options.addOption(Option.builder(GameFinderConstants.OPT_TOTAL)
+                                .longOpt("total")
+                                .hasArg(false)
+                                .desc("Total play time")
+                                .build());
+        options.addOption(Option.builder(GameFinderConstants.OPT_LADDER)
+                                .longOpt("ladder")
+                                .hasArg(true)
+                                .type(Integer.class)
+                                .desc("Ladder of the n games played the most")
+                                .build());
+        options.addOption(Option.builder(GameFinderConstants.OPT_NEVER)
+                                .longOpt("never")
+                                .hasArg(true)
+                                .type(Integer.class)
+                                .desc("List n games never played. A game never played is a game played less than " + GameFinderConstants.NEVER_PLAYED_MINS + " minutes. -1 for all games never played")
+                                .build());
+        options.addOption(Option.builder(GameFinderConstants.OPT_HELP)
+                                .longOpt("help")
+                                .hasArg(false)
+                                .desc("Write this help message")
+                                .build());
 
         CommandLineParser cmdParser = new DefaultParser();
         CommandLine cmd = null;
@@ -100,16 +114,16 @@ public class GameFinder {
         }
         steam.addOwnedGamesToCollection(games);
 
-        if (cmd.hasOption(OPT_TOTAL)) {
+        if (cmd.hasOption(GameFinderConstants.OPT_TOTAL)) {
             games.logTotalPlayTime();
         }
 
-        if (cmd.hasOption(OPT_LADDER)) {
-            games.logLadder(Integer.parseInt(cmd.getOptionValue(OPT_LADDER)));
+        if (cmd.hasOption(GameFinderConstants.OPT_LADDER)) {
+            games.logLadder(Integer.parseInt(cmd.getOptionValue(GameFinderConstants.OPT_LADDER)));
         }
 
-        if (cmd.hasOption(OPT_NEVER)) {
-            games.logNeverPlayer(Integer.parseInt(cmd.getOptionValue(OPT_NEVER)));
+        if (cmd.hasOption(GameFinderConstants.OPT_NEVER)) {
+            games.logNeverPlayer(Integer.parseInt(cmd.getOptionValue(GameFinderConstants.OPT_NEVER)));
         }
     }
 

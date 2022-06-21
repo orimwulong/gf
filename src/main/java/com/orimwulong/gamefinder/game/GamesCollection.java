@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.orimwulong.gamefinder.GameFinderConstants;
 
 public class GamesCollection {
 
@@ -19,7 +20,6 @@ public class GamesCollection {
 
     private SortedMap<String, Game> collection;
     private long totalPlayTime;
-    public static final int NEVER_PLAYED = 5;
 
     public void addGame(Game game) {
         if (this.collection == null) {
@@ -94,7 +94,7 @@ public class GamesCollection {
         }
 
         for (Game game : collection.values()) {
-            if (game.getTotalMinutesPlayed() <= NEVER_PLAYED && LOGGER.isInfoEnabled()) {
+            if (game.getTotalMinutesPlayed() <= GameFinderConstants.NEVER_PLAYED_MINS && LOGGER.isInfoEnabled()) {
                 LOGGER.info(game.getName());
                 i++;
             }
@@ -113,7 +113,7 @@ public class GamesCollection {
 
         while (it.hasNext() && i < number) {
             Game game = it.next();
-            if (game.getTotalMinutesPlayed() <= NEVER_PLAYED) {
+            if (game.getTotalMinutesPlayed() <= GameFinderConstants.NEVER_PLAYED_MINS) {
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info(game.getName());
                 }
