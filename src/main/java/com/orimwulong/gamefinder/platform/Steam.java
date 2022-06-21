@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 import com.google.gson.stream.JsonReader;
+import com.orimwulong.gamefinder.GameFinderConstants;
 import com.orimwulong.gamefinder.game.Game;
 import com.orimwulong.gamefinder.game.GamesCollection;
 import com.orimwulong.gamefinder.utils.HttpsHelper;
@@ -32,8 +33,8 @@ public class Steam implements Platform {
             return false;
         }
 
-        this.steamID64 = configMap.get("steam.steamid64");
-        this.webAPIKey = configMap.get("steam.webapi.key");
+        this.steamID64 = configMap.get(GameFinderConstants.PROP_STEAM_STEAMID64);
+        this.webAPIKey = configMap.get(GameFinderConstants.PROP_STEAM_WEBAPI_KEY);
 
         if (Strings.isNullOrEmpty(this.steamID64) || Strings.isNullOrEmpty(this.webAPIKey)) {
             if (LOGGER.isDebugEnabled()) {
