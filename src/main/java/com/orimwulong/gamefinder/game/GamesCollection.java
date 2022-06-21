@@ -49,7 +49,7 @@ public class GamesCollection {
 
     public void logTotalPlayTime() {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Total play time accross all games " + getDurationLog(this.totalPlayTime));
+            LOGGER.info("Total play time across all games " + getDurationLog(this.totalPlayTime));
         }
     }
 
