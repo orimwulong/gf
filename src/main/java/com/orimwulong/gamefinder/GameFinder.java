@@ -59,7 +59,11 @@ public class GameFinder {
                                 .type(Integer.class)
                                 .desc("List n games never played. A game never played is a game played less than " + GameFinderConstants.NEVER_PLAYED_MINS + " minutes. -1 for all games never played")
                                 .build());
-        options.addOption(Option.builder(GameFinderConstants.OPT_HELP).longOpt("help").hasArg(false).desc("Write this help message").build());
+        options.addOption(Option.builder(GameFinderConstants.OPT_HELP)
+                                .longOpt("help")
+                                .hasArg(false)
+                                .desc("Write this help message")
+                                .build());
 
         CommandLineParser cmdParser = new DefaultParser();
         CommandLine cmd = null;
