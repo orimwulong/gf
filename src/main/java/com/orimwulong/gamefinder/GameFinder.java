@@ -15,6 +15,7 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.orimwulong.gamefinder.game.GamesCollection;
 import com.orimwulong.gamefinder.platform.Steam;
@@ -29,6 +30,13 @@ public class GameFinder {
     private CommandLine cmd;
     private long neverPlayedMins;
     public static void main(final String[] args) {
+
+        Package gfPackage =  GameFinder.class.getPackage();
+        String implementationVersion = gfPackage.getImplementationVersion();
+        String implementationTitle = gfPackage.getImplementationTitle();
+        if (LOGGER.isInfoEnabled() && !Strings.isNullOrEmpty(implementationVersion) && !Strings.isNullOrEmpty(implementationTitle)) {
+            LOGGER.info(implementationTitle + " " + implementationVersion);
+        }
 
         GameFinder gf = new GameFinder();
         gf.cmd = parseArgs(args);
@@ -87,8 +95,8 @@ public class GameFinder {
     private boolean init() {
         boolean initComplete = false;
 
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Initialising GameFinder...");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Initialising GameFinder...");
         }
 
         String propertiesFileName = "gf.properties";
@@ -111,9 +119,6 @@ public class GameFinder {
     }
 
     private void run() {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Getting the games info...");
-        }
         steam.addOwnedGamesToCollection(games);
 
         if (cmd.hasOption(GameFinderConstants.OPT_TOTAL)) {

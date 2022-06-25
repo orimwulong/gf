@@ -58,7 +58,9 @@ See LICENSE file
 ## References
 
 - [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/)
+- [Axion Release Plugin](https://github.com/allegro/axion-release-plugin)
 - [GitHub MarkDown Syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [Gradle](https://gradle.org)
 - [Gson](https://github.com/google/gson)
 - [Guava](https://github.com/google/guava)
 - [LOGBack](https://logback.qos.ch)

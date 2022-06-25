@@ -59,8 +59,8 @@ public class GamesCollection {
             }
             logNLadder(number);
         } else {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Number of games to list for the ladder needs to be a positive number");
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Number of games to list for the ladder needs to be a positive number");
             }
         }
     }

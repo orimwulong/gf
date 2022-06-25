@@ -5,6 +5,8 @@ plugins {
     id 'jacoco'
     // Code quality plugin
     id 'pmd'
+    // Versioning plugin
+    id 'pl.allegro.tech.build.axion-release' version '1.13.14'
 }
 
 repositories {
@@ -27,9 +29,22 @@ dependencies {
     runtimeOnly 'ch.qos.logback:logback-classic:1.2.11'
 }
 
+project.version = scmVersion.version
+def projectMainClass = 'com.orimwulong.gamefinder.GameFinder'
+
+jar {
+    manifest {
+        attributes("Created-By": JavaVersion.current(),
+                    "Main-Class": projectMainClass,
+                    "Implementation-Title": "GameFinder",
+                    "Implementation-Version": project.version,
+                    "Implementation-Vendor": "orimwulong")
+    }
+}
+
 application {
     // Define the main class for the application.
-    mainClass = 'com.orimwulong.gamefinder.GameFinder'
+    mainClass = projectMainClass
     // Enable loading of logback configuraiton file at runtime
     applicationDefaultJvmArgs = ['-Dlogback.configurationFile=logback.xml']
 }
