@@ -30,6 +30,8 @@ dependencies {
 application {
     // Define the main class for the application.
     mainClass = 'com.orimwulong.gamefinder.GameFinder'
+    // Enable loading of logback configuraiton file at runtime
+    applicationDefaultJvmArgs = ['-Dlogback.configurationFile=logback.xml']
 }
 
 distributions {

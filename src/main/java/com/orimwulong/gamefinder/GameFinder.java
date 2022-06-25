@@ -27,6 +27,7 @@ public class GameFinder {
     private Steam steam;
     private GamesCollection games;
     private CommandLine cmd;
+    private long neverPlayedMins;
     public static void main(final String[] args) {
 
         GameFinder gf = new GameFinder();
@@ -57,7 +58,7 @@ public class GameFinder {
                                 .longOpt("never")
                                 .hasArg(true)
                                 .type(Integer.class)
-                                .desc("List n games never played. A game never played is a game played less than " + GameFinderConstants.NEVER_PLAYED_MINS + " minutes. -1 for all games never played")
+                                .desc("List n games never played. A game never played is a game played less than the value of properties [" + GameFinderConstants.PROP_NEVER_PLAYED_MINS + "] in minutes. -1 for all games never played")
                                 .build());
         options.addOption(Option.builder(GameFinderConstants.OPT_HELP)
                                 .longOpt("help")
@@ -101,6 +102,7 @@ public class GameFinder {
             }
         }
 
+        neverPlayedMins = Long.parseLong(properties.getProperty(GameFinderConstants.PROP_NEVER_PLAYED_MINS, "10"));
         steam = new Steam();
         initComplete = initComplete && steam.configure(Maps.fromProperties(properties));
         this.games = new GamesCollection();
@@ -123,7 +125,7 @@ public class GameFinder {
         }
 
         if (cmd.hasOption(GameFinderConstants.OPT_NEVER)) {
-            games.logNeverPlayer(Integer.parseInt(cmd.getOptionValue(GameFinderConstants.OPT_NEVER)));
+            games.logNeverPlayed(Integer.parseInt(cmd.getOptionValue(GameFinderConstants.OPT_NEVER)), neverPlayedMins);
         }
     }
 

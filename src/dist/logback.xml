@@ -1,0 +1,15 @@
+<!-- LOGBack configuration file -->
+<configuration>
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <!-- Base pattern -->
+      <pattern>%msg%n</pattern>
+      <!-- Debugging pattern -->
+      <!-- pattern>%d{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX"} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n</pattern -->
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="Console" />
+  </root>
+</configuration>

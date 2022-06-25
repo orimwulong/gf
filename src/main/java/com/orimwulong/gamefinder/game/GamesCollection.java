@@ -66,15 +66,15 @@ public class GamesCollection {
         }
     }
 
-    public void logNeverPlayer(int number) {
+    public void logNeverPlayed(int number, long neverPlayedMins) {
         int logAll = -1;
         if (number == logAll) {
-            logAllNeverPlayed();
+            logAllNeverPlayed(neverPlayedMins);
         } else {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Logging [" + number + "] games never played");
             }
-            logNNeverPlayed(number);
+            logNNeverPlayed(number, neverPlayedMins);
         }
     }
 
@@ -87,14 +87,14 @@ public class GamesCollection {
         return String.format("%d day(s) %d hour(s) %d minute(s) (from %d minutes)", days, hours, minutes, mins);
     }
 
-    private void logAllNeverPlayed() {
+    private void logAllNeverPlayed(long neverPlayedMins) {
         int i = 0;
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Logging all games never played");
         }
 
         for (Game game : collection.values()) {
-            if (game.getTotalMinutesPlayed() <= GameFinderConstants.NEVER_PLAYED_MINS && LOGGER.isInfoEnabled()) {
+            if (game.getTotalMinutesPlayed() <= neverPlayedMins && LOGGER.isInfoEnabled()) {
                 LOGGER.info(game.getName());
                 i++;
             }
@@ -105,7 +105,7 @@ public class GamesCollection {
         }
     }
 
-    private void logNNeverPlayed(int number) {
+    private void logNNeverPlayed(int number, long neverPlayedMins) {
         List<Game> randomizedList = Lists.newArrayList(collection.values());
         Collections.shuffle(randomizedList, new Random());
         Iterator<Game> it = randomizedList.iterator();
@@ -113,7 +113,7 @@ public class GamesCollection {
 
         while (it.hasNext() && i < number) {
             Game game = it.next();
-            if (game.getTotalMinutesPlayed() <= GameFinderConstants.NEVER_PLAYED_MINS) {
+            if (game.getTotalMinutesPlayed() <= neverPlayedMins) {
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info(game.getName());
                 }
