@@ -17,6 +17,7 @@ import com.orimwulong.gamefinder.utils.HttpsHelper;
 public class Steam implements Platform {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Steam.class);
+    private static final String PLATFORM_NAME = "Steam";
 
     private String steamID64;
     private String webAPIKey;
@@ -24,7 +25,7 @@ public class Steam implements Platform {
 
     @Override
     public String getName() {
-        return "Steam";
+        return PLATFORM_NAME;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Steam implements Platform {
         String baseUrl = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&include_appinfo=true&include_played_free_games=true";
         String urlWithTokens = baseUrl +"&steamid=" + this.steamID64 + "&key=" + this.webAPIKey;
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Retrieving owned games list");
+            LOGGER.info("Retrieving owned games list from " + PLATFORM_NAME + "...");
         }
         result = HttpsHelper.getHttpsContent(urlWithTokens);
         if (Strings.isNullOrEmpty(result) && LOGGER.isErrorEnabled()) {
@@ -64,8 +65,7 @@ public class Steam implements Platform {
     @Override
     public void addOwnedGamesToCollection(GamesCollection collection) {
         String gamesList = getRawOwnedGamesList();
-        JsonReader reader = new JsonReader(new StringReader(gamesList));
-        try {
+        try (JsonReader reader = new JsonReader(new StringReader(gamesList))) {
             readRoot(reader, collection);
             reader.close();
             if (LOGGER.isInfoEnabled()) {
@@ -74,14 +74,6 @@ public class Steam implements Platform {
         } catch (IOException e) {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error("Exception while parsing content", e);
-            }
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace("Exception while closing reader", e);
-                }
             }
         }
     }
