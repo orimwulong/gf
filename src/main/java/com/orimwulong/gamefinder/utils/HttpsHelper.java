@@ -25,8 +25,7 @@ public final class HttpsHelper {
     public static String getHttpsContent(String httpsUrl) {
         int okResponseCode = 200;
         String content = null;
-        InputStream is = null;
-        Reader reader = null;
+
         try {
             URL url = new URL(httpsUrl);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -35,11 +34,11 @@ public final class HttpsHelper {
             int responseCode = conn.getResponseCode();
             String responseMessage = conn.getResponseMessage();
             if (responseCode == okResponseCode) {
-                is = conn.getInputStream();
-                reader = new InputStreamReader(is, StandardCharsets.UTF_8);
-                content = CharStreams.toString(reader);
-                reader.close();
-                is.close();
+                try (InputStream is = conn.getInputStream()) {
+                    try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+                        content = CharStreams.toString(reader);
+                    }
+                }
             } else {
                 if (LOGGER.isErrorEnabled()) {
                     LOGGER.error("Content retrieval failed. [Code=" + responseCode + "][Message=" + responseMessage + "]");
@@ -49,15 +48,6 @@ public final class HttpsHelper {
         } catch (IOException e) {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error("Exception while getting HTTPS content", e);
-            }
-        } finally {
-            try {
-                reader.close();
-                is.close();
-            } catch (IOException e) {
-                if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace("Exception while closing streams", e);
-                }
             }
         }
 
