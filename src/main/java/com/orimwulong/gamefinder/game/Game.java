@@ -7,11 +7,13 @@ public class Game {
 
     private final String name;
     private long totalMinutesPlayed;
+    private final String imgIconUrl;
     private Set<String> onPlatform;
 
-    public Game(String name, long totalMinutesPlayed) {
+    public Game(String name, long totalMinutesPlayed, String imgIconUrl) {
         this.name = name;
         this.totalMinutesPlayed = totalMinutesPlayed;
+        this.imgIconUrl = imgIconUrl;
     }
 
     public String getName() {
@@ -20,6 +22,10 @@ public class Game {
 
     public long getTotalMinutesPlayed() {
         return totalMinutesPlayed;
+    }
+
+    public String getImgIconUrl() {
+        return imgIconUrl;
     }
 
     public void addPlayedMinutes(long minutesToAdd) {
@@ -42,7 +48,7 @@ public class Game {
 
     @Override
     public String toString() {
-        return "Game [name=" + name + ", onPlatform=" + onPlatform + ", totalMinPlayed=" + totalMinutesPlayed + "]";
+        return "Game [name=" + name + ", onPlatform=" + onPlatform + ", totalMinutesPlayed=" + totalMinutesPlayed + ", imgIconUrl=" + imgIconUrl + "]";
     }
 
     @Override
