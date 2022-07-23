@@ -1,4 +1,4 @@
-package com.orimwulong.gamefinder.utils;
+package com.orimwulong.gamefinder.util;
 
 import java.io.IOException;
 import java.io.InputStream;

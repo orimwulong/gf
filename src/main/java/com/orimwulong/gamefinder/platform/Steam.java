@@ -9,15 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 import com.google.gson.stream.JsonReader;
-import com.orimwulong.gamefinder.GameFinderConstants;
 import com.orimwulong.gamefinder.game.Game;
 import com.orimwulong.gamefinder.game.GamesCollection;
-import com.orimwulong.gamefinder.utils.HttpsHelper;
+import com.orimwulong.gamefinder.util.HttpsHelper;
 
 public class Steam implements Platform {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Steam.class);
     private static final String PLATFORM_NAME = "Steam";
+    private static final String PROP_STEAM_STEAMID64 = "steam.steamid64";
+    private static final String PROP_STEAM_WEBAPI_KEY = "steam.webapi.key";
     private static final String BASE_URL_GET_OWNED_GAMES = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&include_appinfo=true&include_played_free_games=true";
     private static final String BASE_URL_GAME_IMG_ICON = "https://media.steampowered.com/steamcommunity/public/images/apps";
 
@@ -36,8 +37,8 @@ public class Steam implements Platform {
             return false;
         }
 
-        this.steamID64 = configMap.get(GameFinderConstants.PROP_STEAM_STEAMID64);
-        this.webAPIKey = configMap.get(GameFinderConstants.PROP_STEAM_WEBAPI_KEY);
+        this.steamID64 = configMap.get(PROP_STEAM_STEAMID64);
+        this.webAPIKey = configMap.get(PROP_STEAM_WEBAPI_KEY);
 
         if (Strings.isNullOrEmpty(this.steamID64) || Strings.isNullOrEmpty(this.webAPIKey)) {
             if (LOGGER.isDebugEnabled()) {
@@ -47,20 +48,6 @@ public class Steam implements Platform {
         }
 
         return true;
-    }
-
-    @Override
-    public String getRawOwnedGamesList() {
-        String result;
-        String urlWithTokens = BASE_URL_GET_OWNED_GAMES +"&steamid=" + this.steamID64 + "&key=" + this.webAPIKey;
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Retrieving owned games list from " + PLATFORM_NAME + "...");
-        }
-        result = HttpsHelper.getHttpsContent(urlWithTokens);
-        if (Strings.isNullOrEmpty(result) && LOGGER.isErrorEnabled()) {
-            LOGGER.error("Unable to retrieve ownder games list. Base URL was [" + BASE_URL_GET_OWNED_GAMES + "]");
-        }
-        return result;
     }
 
     @Override
@@ -77,6 +64,19 @@ public class Steam implements Platform {
                 LOGGER.error("Exception while parsing content", e);
             }
         }
+    }
+
+    private String getRawOwnedGamesList() {
+        String result;
+        String urlWithTokens = BASE_URL_GET_OWNED_GAMES +"&steamid=" + this.steamID64 + "&key=" + this.webAPIKey;
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Retrieving owned games list from " + PLATFORM_NAME + "...");
+        }
+        result = HttpsHelper.getHttpsContent(urlWithTokens);
+        if (Strings.isNullOrEmpty(result) && LOGGER.isErrorEnabled()) {
+            LOGGER.error("Unable to retrieve ownder games list. Base URL was [" + BASE_URL_GET_OWNED_GAMES + "]");
+        }
+        return result;
     }
 
     private void readRoot(JsonReader reader, GamesCollection collection) throws IOException {

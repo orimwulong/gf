@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Lists;
 
 public class GamesCollection {
@@ -142,6 +143,10 @@ public class GamesCollection {
         if (!it.hasNext() && i < number && LOGGER.isDebugEnabled()) {
             LOGGER.debug("No more games in the collection");
         }
+    }
+
+    public ImmutableSortedMap<String, Game> getCollection() {
+        return ImmutableSortedMap.copyOfSorted(collection);
     }
 
 }
