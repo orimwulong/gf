@@ -19,10 +19,19 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.orimwulong.gamefinder.game.GamesCollection;
 import com.orimwulong.gamefinder.platform.Steam;
+import com.orimwulong.gamefinder.util.GalleryWriter;
 
 public class GameFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameFinder.class);
+
+    private static final String OPT_TOTAL = "t";
+    private static final String OPT_LADDER = "l";
+    private static final String OPT_NEVER = "n";
+    private static final String OPT_HELP = "h";
+    private static final String OPT_GALLERY = "g";
+    private static final String PROP_NEVER_PLAYED_MINS = "gf.never.played.mins";
+
     private static Options options;
 
     private Steam steam;
@@ -40,7 +49,7 @@ public class GameFinder {
 
         GameFinder gf = new GameFinder();
         gf.cmd = parseArgs(args);
-        if (gf.cmd == null || gf.cmd.hasOption(GameFinderConstants.OPT_HELP)) {
+        if (gf.cmd == null || gf.cmd.hasOption(OPT_HELP)) {
             usage(options);
         } else {
             if (gf.init()) {
@@ -51,27 +60,32 @@ public class GameFinder {
 
     private static CommandLine parseArgs(String[] args) {
         options = new Options();
-        options.addOption(Option.builder(GameFinderConstants.OPT_TOTAL)
+        options.addOption(Option.builder(OPT_TOTAL)
                                 .longOpt("total")
                                 .hasArg(false)
                                 .desc("Total play time")
                                 .build());
-        options.addOption(Option.builder(GameFinderConstants.OPT_LADDER)
+        options.addOption(Option.builder(OPT_LADDER)
                                 .longOpt("ladder")
                                 .hasArg(true)
                                 .type(Integer.class)
                                 .desc("Ladder of the n games played the most")
                                 .build());
-        options.addOption(Option.builder(GameFinderConstants.OPT_NEVER)
+        options.addOption(Option.builder(OPT_NEVER)
                                 .longOpt("never")
                                 .hasArg(true)
                                 .type(Integer.class)
-                                .desc("List n games never played. A game never played is a game played less than the value of properties [" + GameFinderConstants.PROP_NEVER_PLAYED_MINS + "] in minutes. -1 for all games never played")
+                                .desc("List n games never played. A game never played is a game played less than the value of properties [" + PROP_NEVER_PLAYED_MINS + "] in minutes. -1 for all games never played")
                                 .build());
-        options.addOption(Option.builder(GameFinderConstants.OPT_HELP)
+        options.addOption(Option.builder(OPT_HELP)
                                 .longOpt("help")
                                 .hasArg(false)
                                 .desc("Write this help message")
+                                .build());
+        options.addOption(Option.builder(OPT_GALLERY)
+                                .longOpt("gallery")
+                                .hasArg(false)
+                                .desc("Create a HTML gallery in the current working path")
                                 .build());
 
         CommandLineParser cmdParser = new DefaultParser();
@@ -110,7 +124,7 @@ public class GameFinder {
             }
         }
 
-        neverPlayedMins = Long.parseLong(properties.getProperty(GameFinderConstants.PROP_NEVER_PLAYED_MINS, "10"));
+        neverPlayedMins = Long.parseLong(properties.getProperty(PROP_NEVER_PLAYED_MINS, "10"));
         steam = new Steam();
         initComplete = initComplete && steam.configure(Maps.fromProperties(properties));
         this.games = new GamesCollection();
@@ -121,16 +135,20 @@ public class GameFinder {
     private void run() {
         steam.addOwnedGamesToCollection(games);
 
-        if (cmd.hasOption(GameFinderConstants.OPT_TOTAL)) {
+        if (cmd.hasOption(OPT_TOTAL)) {
             games.logTotalPlayTime();
         }
 
-        if (cmd.hasOption(GameFinderConstants.OPT_LADDER)) {
-            games.logLadder(Integer.parseInt(cmd.getOptionValue(GameFinderConstants.OPT_LADDER)));
+        if (cmd.hasOption(OPT_LADDER)) {
+            games.logLadder(Integer.parseInt(cmd.getOptionValue(OPT_LADDER)));
         }
 
-        if (cmd.hasOption(GameFinderConstants.OPT_NEVER)) {
-            games.logNeverPlayed(Integer.parseInt(cmd.getOptionValue(GameFinderConstants.OPT_NEVER)), neverPlayedMins);
+        if (cmd.hasOption(OPT_NEVER)) {
+            games.logNeverPlayed(Integer.parseInt(cmd.getOptionValue(OPT_NEVER)), neverPlayedMins);
+        }
+
+        if (cmd.hasOption(OPT_GALLERY)) {
+            GalleryWriter.writeHtmlGallery(games.getGamesList());
         }
     }
 

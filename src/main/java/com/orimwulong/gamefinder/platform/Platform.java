@@ -8,7 +8,6 @@ public interface Platform {
 
     String getName();
     boolean configure(Map<String, String> configMap);
-    String getRawOwnedGamesList();
     void addOwnedGamesToCollection(GamesCollection collection);
 
 }

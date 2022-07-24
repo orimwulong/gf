@@ -1,4 +1,4 @@
-package com.orimwulong.gamefinder.utils;
+package com.orimwulong.gamefinder.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +37,9 @@ public final class HttpsHelper {
                 try (InputStream is = conn.getInputStream()) {
                     try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
                         content = CharStreams.toString(reader);
+                        if (LOGGER.isTraceEnabled()) {
+                            LOGGER.trace(content);
+                        }
                     }
                 }
             } else {

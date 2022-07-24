@@ -65,4 +65,4 @@ See LICENSE file
 - [Guava](https://github.com/google/guava)
 - [LOGBack](https://logback.qos.ch)
 - [SLF4j](https://www.slf4j.org)
-- [Steam Web API](https://developer.valvesoftware.com/wiki/Steam_Web_API)
+- [Steam Web API](https://developer.valvesoftware.com/wiki/Steam_Web_API) or [Steam Web API](https://partner.steamgames.com/doc/webapi)
