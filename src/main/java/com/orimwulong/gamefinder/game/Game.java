@@ -3,17 +3,21 @@ package com.orimwulong.gamefinder.game;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+
 public class Game {
 
     private final String name;
     private long totalMinutesPlayed;
     private final String imgIconUrl;
-    private Set<String> onPlatform;
+    private final Set<String> onPlatforms;
 
-    public Game(String name, long totalMinutesPlayed, String imgIconUrl) {
+    public Game(String name, long totalMinutesPlayed, String imgIconUrl, String platformName) {
         this.name = name;
         this.totalMinutesPlayed = totalMinutesPlayed;
         this.imgIconUrl = imgIconUrl;
+        this.onPlatforms = new HashSet<>();
+        this.onPlatforms.add(platformName);
     }
 
     public String getName() {
@@ -28,27 +32,28 @@ public class Game {
         return imgIconUrl;
     }
 
+    public ImmutableSet<String> getOnPlatforms() {
+        return ImmutableSet.copyOf(onPlatforms);
+    }
+
     public void addPlayedMinutes(long minutesToAdd) {
         this.totalMinutesPlayed += minutesToAdd;
     }
 
-    public boolean addPlatform(String platformName) {
-        if (this.onPlatform == null) {
-            this.onPlatform = new HashSet<>();
-        }
-        return this.onPlatform.add(platformName);
+    public boolean addPlatforms(Set<String> platformNames) {
+        return this.onPlatforms.addAll(platformNames);
     }
 
     public boolean isOnPlatform(String platformName) {
-        if (this.onPlatform == null) {
+        if (this.onPlatforms == null) {
             return false;
         }
-        return this.onPlatform.contains(platformName);
+        return this.onPlatforms.contains(platformName);
     }
 
     @Override
     public String toString() {
-        return "Game [name=" + name + ", onPlatform=" + onPlatform + ", totalMinutesPlayed=" + totalMinutesPlayed + ", imgIconUrl=" + imgIconUrl + "]";
+        return "Game [name=" + name + ", onPlatforms=" + onPlatforms + ", totalMinutesPlayed=" + totalMinutesPlayed + ", imgIconUrl=" + imgIconUrl + "]";
     }
 
     @Override
@@ -56,7 +61,7 @@ public class Game {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((onPlatform == null) ? 0 : onPlatform.hashCode());
+        result = prime * result + ((onPlatforms == null) ? 0 : onPlatforms.hashCode());
         result = prime * result + (int) (totalMinutesPlayed ^ (totalMinutesPlayed >>> 32));
         return result;
     }

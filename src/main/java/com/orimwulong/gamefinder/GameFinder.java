@@ -148,7 +148,7 @@ public class GameFinder {
         }
 
         if (cmd.hasOption(OPT_GALLERY)) {
-            GalleryWriter.writeHtmlGallery(games.getCollection());
+            GalleryWriter.writeHtmlGallery(games.getGamesList());
         }
     }
 

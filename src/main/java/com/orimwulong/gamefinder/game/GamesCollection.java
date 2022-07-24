@@ -1,6 +1,5 @@
 package com.orimwulong.gamefinder.game;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +10,9 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.orimwulong.gamefinder.util.TimeHelper;
 
 public class GamesCollection {
 
@@ -30,7 +30,9 @@ public class GamesCollection {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Adding played minutes to existing game [" + gameName + "]");
             }
-            this.collection.get(gameName).addPlayedMinutes(game.getTotalMinutesPlayed());
+            Game gameInCollection = this.collection.get(gameName);
+            gameInCollection.addPlayedMinutes(game.getTotalMinutesPlayed());
+            gameInCollection.addPlatforms(game.getOnPlatforms());
         } else {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Adding game to collection [" + gameName + "]");
@@ -49,7 +51,7 @@ public class GamesCollection {
 
     public void logTotalPlayTime() {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Total play time across all games " + getDurationLog(this.totalPlayTime));
+            LOGGER.info("Total play time across all games " + TimeHelper.getDurationText(this.totalPlayTime));
         }
     }
 
@@ -76,15 +78,6 @@ public class GamesCollection {
             }
             logNNeverPlayed(number, neverPlayedMins);
         }
-    }
-
-    private String getDurationLog(long mins) {
-        Duration d = Duration.ofMinutes(mins);
-        long days = d.toDaysPart();
-        long hours = d.toHoursPart();
-        long minutes = d.toMinutesPart();
-
-        return String.format("%d day(s) %d hour(s) %d minute(s) (from %d minutes)", days, hours, minutes, mins);
     }
 
     private void logAllNeverPlayed(long neverPlayedMins) {
@@ -135,7 +128,7 @@ public class GamesCollection {
         while (it.hasNext() && i < number) {
             Game game = it.next();
             if (LOGGER.isInfoEnabled()) {
-                LOGGER.info(game.getName() + " [" + getDurationLog(game.getTotalMinutesPlayed()) + "]");
+                LOGGER.info(game.getName() + " [" + TimeHelper.getDurationText(game.getTotalMinutesPlayed()) + "]");
             }
             i++;
         }
@@ -145,8 +138,8 @@ public class GamesCollection {
         }
     }
 
-    public ImmutableSortedMap<String, Game> getCollection() {
-        return ImmutableSortedMap.copyOfSorted(collection);
+    public ImmutableList<Game> getGamesList() {
+        return ImmutableList.copyOf(collection.values());
     }
 
 }

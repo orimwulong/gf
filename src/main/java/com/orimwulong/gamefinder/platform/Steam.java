@@ -132,7 +132,8 @@ public class Steam implements Platform {
         if (gameAppId != -1L && !Strings.isNullOrEmpty(gameImgIcon)) {
             gameImgIconUrl = BASE_URL_GAME_IMG_ICON + "/" + gameAppId + "/" + gameImgIcon + ".jpg";
         }
-        collection.addGame(new Game(gameName, totalMinutesPlayed, gameImgIconUrl));
+        Game game = new Game(gameName, totalMinutesPlayed, gameImgIconUrl, PLATFORM_NAME);
+        collection.addGame(game);
     }
 
 }
