@@ -48,7 +48,7 @@ See program usage for details
 
 ## Issues / Improvements
 
-Please report issues and improvements idea using the [GitHub Issues page](https://github.com/orimwulong/gf/issues)
+Please report issues and improvements idea using the [GitHub Issues page](https://github.com/orimwulong/gf/issues)\
 Use the labels to differentiate between a *bug* and an *enhancement*
 
 ## License
