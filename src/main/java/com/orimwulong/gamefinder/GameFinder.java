@@ -19,7 +19,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.orimwulong.gamefinder.game.GamesCollection;
 import com.orimwulong.gamefinder.platform.Steam;
-import com.orimwulong.gamefinder.util.GalleryWriter;
+import com.orimwulong.gamefinder.writer.GamesCollectionWriter;
+import com.orimwulong.gamefinder.writer.HtmlGalleryWriter;
 
 public class GameFinder {
 
@@ -30,6 +31,9 @@ public class GameFinder {
     private static final String OPT_NEVER = "n";
     private static final String OPT_HELP = "h";
     private static final String OPT_GALLERY = "g";
+    private static final String OPT_SAVE = "s";
+    //private static final String OPT_COMPARE = "c"; Option with a list 2 arguments: collection to compare to, strategy of comparison
+    // private static final String OPT_LOAD = "r"; Reload previously save raw data instead of calling the API
     private static final String PROP_NEVER_PLAYED_MINS = "gf.never.played.mins";
 
     private static Options options;
@@ -87,6 +91,11 @@ public class GameFinder {
                                 .hasArg(false)
                                 .desc("Create a HTML gallery in the current working path")
                                 .build());
+        options.addOption(Option.builder(OPT_SAVE)
+                                .longOpt("save")
+                                .hasArg(false)
+                                .desc("Save platforms raw data that can be used to compare with friends")
+                                .build());
 
         CommandLineParser cmdParser = new DefaultParser();
         CommandLine cmd = null;
@@ -133,7 +142,7 @@ public class GameFinder {
     }
 
     private void run() {
-        steam.addOwnedGamesToCollection(games);
+        steam.addOwnedGamesToCollection(games, cmd.hasOption(OPT_SAVE));
 
         if (cmd.hasOption(OPT_TOTAL)) {
             games.logTotalPlayTime();
@@ -148,7 +157,8 @@ public class GameFinder {
         }
 
         if (cmd.hasOption(OPT_GALLERY)) {
-            GalleryWriter.writeHtmlGallery(games.getGamesList());
+            GamesCollectionWriter writer = new HtmlGalleryWriter();
+            writer.write(games.getGamesList());
         }
     }
 

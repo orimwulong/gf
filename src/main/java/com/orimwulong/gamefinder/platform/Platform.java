@@ -8,6 +8,6 @@ public interface Platform {
 
     String getName();
     boolean configure(Map<String, String> configMap);
-    void addOwnedGamesToCollection(GamesCollection collection);
+    void addOwnedGamesToCollection(GamesCollection collection, boolean saveRawData);
 
 }

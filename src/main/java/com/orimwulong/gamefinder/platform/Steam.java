@@ -12,11 +12,13 @@ import com.google.gson.stream.JsonReader;
 import com.orimwulong.gamefinder.game.Game;
 import com.orimwulong.gamefinder.game.GamesCollection;
 import com.orimwulong.gamefinder.util.HttpsHelper;
+import com.orimwulong.gamefinder.util.TimeHelper;
+import com.orimwulong.gamefinder.writer.SimpleWriter;
 
 public class Steam implements Platform {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Steam.class);
-    private static final String PLATFORM_NAME = "Steam";
+    private static final String PLATFORM_NAME = "steam";
     private static final String PROP_STEAM_STEAMID64 = "steam.steamid64";
     private static final String PROP_STEAM_WEBAPI_KEY = "steam.webapi.key";
     private static final String BASE_URL_GET_OWNED_GAMES = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?format=json&include_appinfo=true&include_played_free_games=true";
@@ -51,8 +53,15 @@ public class Steam implements Platform {
     }
 
     @Override
-    public void addOwnedGamesToCollection(GamesCollection collection) {
+    public void addOwnedGamesToCollection(GamesCollection collection, boolean saveRawData) {
         String gamesList = getRawOwnedGamesList();
+
+        if (saveRawData) {
+            String currentDate = TimeHelper.getNowAsPattern("yyyyMMdd-HHmmss");
+            String rawDataFileName = currentDate + "-" + PLATFORM_NAME + ".json";
+            SimpleWriter.writeToFile(rawDataFileName, gamesList);
+        }
+
         try (JsonReader reader = new JsonReader(new StringReader(gamesList))) {
             readRoot(reader, collection);
             reader.close();

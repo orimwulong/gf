@@ -1,4 +1,4 @@
-package com.orimwulong.gamefinder.util;
+package com.orimwulong.gamefinder.writer;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,17 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.orimwulong.gamefinder.game.Game;
+import com.orimwulong.gamefinder.util.TimeHelper;
 
-public final class GalleryWriter {
+public class HtmlGalleryWriter implements GamesCollectionWriter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GalleryWriter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlGalleryWriter.class);
     private static final String GALLERY_NAME = "-gallery.html";
 
-    private GalleryWriter() {
-        throw new java.lang.UnsupportedOperationException("GalleryWriter is a utility class and cannot be instantiated");
-    }
-
-    public static void writeHtmlGallery(List<Game> gamesList) {
+    @Override
+    public void write(List<Game> gamesList) {
         String currentDate = TimeHelper.getNowAsPattern("yyyyMMdd-HHmmss");
         String galleryName = currentDate + GALLERY_NAME;
         String title = "My games collection as of " + currentDate;
