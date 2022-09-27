@@ -2,6 +2,9 @@ package com.orimwulong.gamefinder.platform;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -54,15 +57,51 @@ public class Steam implements Platform {
 
     @Override
     public void addOwnedGamesToCollection(GamesCollection collection, boolean saveRawData) {
-        String gamesList = getRawOwnedGamesList();
+        String rawData;
+        String urlWithTokens = BASE_URL_GET_OWNED_GAMES +"&steamid=" + this.steamID64 + "&key=" + this.webAPIKey;
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Retrieving owned games list from " + PLATFORM_NAME + " API...");
+        }
+        rawData = HttpsHelper.getHttpsContent(urlWithTokens);
+        if (Strings.isNullOrEmpty(rawData)) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Unable to retrieve ownder games list. Base URL was [" + BASE_URL_GET_OWNED_GAMES + "]");
+            }
+        } else {
+            addOwnedGamesToCollection(collection, rawData, saveRawData);
+        }
+    }
 
+    @Override
+    public void addOwnedGamesToCollection(GamesCollection collection, Path filePath, boolean saveRawData) {
+        String rawData = null;
+        try {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Retrieving owned games list from file " + filePath.toString() + "...");
+            }
+            rawData = Files.readString(filePath,  StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Exception while loading raw data", e);
+            }
+        }
+        if (Strings.isNullOrEmpty(rawData)) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Loaded games collection is empty");
+            }
+        } else {
+            addOwnedGamesToCollection(collection, rawData, saveRawData);
+        }
+    }
+
+    private void addOwnedGamesToCollection(GamesCollection collection, String rawData, boolean saveRawData) {
         if (saveRawData) {
             String currentDate = TimeHelper.getNowAsPattern("yyyyMMdd-HHmmss");
             String rawDataFileName = currentDate + "-" + PLATFORM_NAME + ".json";
-            SimpleWriter.writeToFile(rawDataFileName, gamesList);
+            SimpleWriter.writeToFile(rawDataFileName, rawData);
         }
 
-        try (JsonReader reader = new JsonReader(new StringReader(gamesList))) {
+        try (JsonReader reader = new JsonReader(new StringReader(rawData))) {
             readRoot(reader, collection);
             reader.close();
             if (LOGGER.isInfoEnabled()) {
@@ -73,19 +112,6 @@ public class Steam implements Platform {
                 LOGGER.error("Exception while parsing content", e);
             }
         }
-    }
-
-    private String getRawOwnedGamesList() {
-        String result;
-        String urlWithTokens = BASE_URL_GET_OWNED_GAMES +"&steamid=" + this.steamID64 + "&key=" + this.webAPIKey;
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Retrieving owned games list from " + PLATFORM_NAME + "...");
-        }
-        result = HttpsHelper.getHttpsContent(urlWithTokens);
-        if (Strings.isNullOrEmpty(result) && LOGGER.isErrorEnabled()) {
-            LOGGER.error("Unable to retrieve ownder games list. Base URL was [" + BASE_URL_GET_OWNED_GAMES + "]");
-        }
-        return result;
     }
 
     private void readRoot(JsonReader reader, GamesCollection collection) throws IOException {

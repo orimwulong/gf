@@ -2,6 +2,7 @@ package com.orimwulong.gamefinder;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -32,8 +33,8 @@ public class GameFinder {
     private static final String OPT_HELP = "h";
     private static final String OPT_GALLERY = "g";
     private static final String OPT_SAVE = "s";
+    private static final String OPT_LOAD = "r";
     //private static final String OPT_COMPARE = "c"; Option with a list 2 arguments: collection to compare to, strategy of comparison
-    // private static final String OPT_LOAD = "r"; Reload previously save raw data instead of calling the API
     private static final String PROP_NEVER_PLAYED_MINS = "gf.never.played.mins";
 
     private static Options options;
@@ -42,8 +43,8 @@ public class GameFinder {
     private GamesCollection games;
     private CommandLine cmd;
     private long neverPlayedMins;
-    public static void main(final String[] args) {
 
+    public static void main(final String[] args) {
         Package gfPackage =  GameFinder.class.getPackage();
         String implementationVersion = gfPackage.getImplementationVersion();
         String implementationTitle = gfPackage.getImplementationTitle();
@@ -72,12 +73,14 @@ public class GameFinder {
         options.addOption(Option.builder(OPT_LADDER)
                                 .longOpt("ladder")
                                 .hasArg(true)
+                                .argName("n")
                                 .type(Integer.class)
                                 .desc("Ladder of the n games played the most")
                                 .build());
         options.addOption(Option.builder(OPT_NEVER)
                                 .longOpt("never")
                                 .hasArg(true)
+                                .argName("n")
                                 .type(Integer.class)
                                 .desc("List n games never played. A game never played is a game played less than the value of properties [" + PROP_NEVER_PLAYED_MINS + "] in minutes. -1 for all games never played")
                                 .build());
@@ -95,6 +98,13 @@ public class GameFinder {
                                 .longOpt("save")
                                 .hasArg(false)
                                 .desc("Save platforms raw data that can be used to compare with friends")
+                                .build());
+        options.addOption(Option.builder(OPT_LOAD)
+                                .longOpt("reload")
+                                .hasArg(true)
+                                .argName("filename")
+                                .type(String.class)
+                                .desc("Reload platform raw data file instead of calling the API")
                                 .build());
 
         CommandLineParser cmdParser = new DefaultParser();
@@ -142,7 +152,13 @@ public class GameFinder {
     }
 
     private void run() {
-        steam.addOwnedGamesToCollection(games, cmd.hasOption(OPT_SAVE));
+        boolean saveRawData = cmd.hasOption(OPT_SAVE);
+        if (cmd.hasOption(OPT_LOAD)) {
+            Path filePath = Paths.get(cmd.getOptionValue(OPT_LOAD));
+            steam.addOwnedGamesToCollection(games, filePath, saveRawData);
+        } else {
+            steam.addOwnedGamesToCollection(games, saveRawData);
+        }
 
         if (cmd.hasOption(OPT_TOTAL)) {
             games.logTotalPlayTime();
