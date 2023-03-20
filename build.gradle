@@ -17,7 +17,7 @@ repositories {
 dependencies {
     // Dependencies used for compilation and runtime
     implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'org.slf4j:slf4j-api:2.0.6'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'commons-cli:commons-cli:1.5.0'
 
