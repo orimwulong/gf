@@ -6,7 +6,7 @@ plugins {
     // Code quality plugin
     id 'pmd'
     // Versioning plugin
-    id 'pl.allegro.tech.build.axion-release' version '1.14.3'
+    id 'pl.allegro.tech.build.axion-release' version '1.15.0'
 }
 
 repositories {
@@ -17,16 +17,16 @@ repositories {
 dependencies {
     // Dependencies used for compilation and runtime
     implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'org.slf4j:slf4j-api:2.0.6'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'commons-cli:commons-cli:1.5.0'
 
     // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 
     // Dependencies only used at runtime, not for compilation
-    runtimeOnly 'ch.qos.logback:logback-core:1.4.5'
-    runtimeOnly 'ch.qos.logback:logback-classic:1.4.5'
+    runtimeOnly 'ch.qos.logback:logback-core:1.4.7'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.4.7'
 }
 
 project.version = scmVersion.version
